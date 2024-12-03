@@ -12,7 +12,7 @@ from fastapi.responses import StreamingResponse
 from langflow.api.utils import AsyncDbSession, CurrentActiveUser
 from langflow.api.v1.schemas import UploadFileResponse
 from langflow.services.database.models.flow import Flow
-from langflow.services.deps import get_settings_service, get_storage_service
+from langflow.services.deps import get_storage_service
 from langflow.services.storage.service import StorageService
 from langflow.services.storage.utils import build_content_type_from_extension
 
