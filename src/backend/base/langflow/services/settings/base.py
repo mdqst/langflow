@@ -245,6 +245,12 @@ class Settings(BaseSettings):
                 logger.debug("Using LANGFLOW_DATABASE_URL env variable.")
             else:
                 logger.debug("No database_url env variable, using sqlite database")
+
+                # Check if the LANGFLOW_DATABASE_SQLITE_FALLBACK flag is explicitly set to "true"
+                if os.getenv("LANGFLOW_DATABASE_SQLITE_FALLBACK", "").lower() != "true":
+                    msg = "No database_url provided or LANGFLOW_DATABASE_SQLITE_FALLBACK flag not set to 'true'"
+                    raise AssertionError(msg)
+
                 # Originally, we used sqlite:///./langflow.db
                 # so we need to migrate to the new format
                 # if there is a database in that location
