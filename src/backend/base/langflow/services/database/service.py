@@ -55,13 +55,25 @@ class DatabaseService(Service):
         self.async_engine = self._create_async_engine()
         alembic_log_file = self.settings_service.settings.alembic_log_file
 
-        # Check if the provided path is absolute, cross-platform.
-        if Path(alembic_log_file).is_absolute():
-            # Use the absolute path directly.
-            self.alembic_log_path = Path(alembic_log_file)
-        else:
-            # Construct the path using the langflow directory.
-            self.alembic_log_path = Path(langflow_dir) / alembic_log_file
+        # TODO: FRAZ - This is a temporary fix to avoid the alembic log file from being created in the root directory.
+        import os 
+        alembic_log_file = os.path.join(os.getcwd(), "data", alembic_log_file)
+        self.alembic_log_path = Path(alembic_log_file)
+
+        # Ensure the directory exists
+        self.alembic_log_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Create the log file if it doesn't exist
+        if not self.alembic_log_path.exists():
+            self.alembic_log_path.touch()
+
+        # # Check if the provided path is absolute, cross-platform.
+        # if Path(alembic_log_file).is_absolute():
+        #     # Use the absolute path directly.
+        #     self.alembic_log_path = Path(alembic_log_file)
+        # else:
+        #     # Construct the path using the langflow directory.
+        #     self.alembic_log_path = Path(langflow_dir) / alembic_log_file
 
     def reload_engine(self) -> None:
         self._sanitize_database_url()

@@ -630,8 +630,9 @@ def create_or_update_starter_projects(all_types_dict: dict) -> None:
             if updated_project_data != project_data:
                 project_data = updated_project_data
                 # We also need to update the project data in the file
+                logger.info(f"Skipping update of starter project {project_name} file in {project_path}")
 
-                update_project_file(project_path, project, updated_project_data)
+                # update_project_file(project_path, project, updated_project_data)
             if project_name and project_data:
                 for existing_project in get_all_flows_similar_to_project(session, new_folder.id):
                     session.delete(existing_project)
