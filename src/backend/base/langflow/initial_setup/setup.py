@@ -630,7 +630,7 @@ def create_or_update_starter_projects(all_types_dict: dict) -> None:
             if updated_project_data != project_data:
                 project_data = updated_project_data
                 # We also need to update the project data in the file
-                logger.info(f"Skipping update of starter project {project_name} file in {project_path}")
+                logger.info(f"TODO: Skipping update of starter project {project_name} file in {project_path}")
 
                 # update_project_file(project_path, project, updated_project_data)
             if project_name and project_data:
