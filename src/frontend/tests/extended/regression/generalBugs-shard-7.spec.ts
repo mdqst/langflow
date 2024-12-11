@@ -1,37 +1,28 @@
 import { expect, test } from "@playwright/test";
-import uaParser from "ua-parser-js";
+import { awaitBootstrapTest } from "../../utils/await-bootstrap-test";
 
 // TODO: This test might not be needed anymore
 test(
   "should be able to select all with ctrl + A on advanced modal",
   { tag: ["@release"] },
   async ({ page }) => {
-    await page.goto("/");
-
-    let modalCount = 0;
-
-    try {
-      const modalTitleElement = await page?.getByTestId("modal-title");
-      if (modalTitleElement) {
-        modalCount = await modalTitleElement.count();
-      }
-    } catch (error) {
-      modalCount = 0;
-    }
-
-    while (modalCount === 0) {
-      await page.getByText("New Flow", { exact: true }).click();
-      await page.waitForSelector('[data-testid="modal-title"]', {
-        timeout: 3000,
-      });
-      modalCount = await page.getByTestId("modal-title")?.count();
-    }
+    await awaitBootstrapTest(page);
 
     await page.waitForSelector('[data-testid="blank-flow"]', {
-      timeout: 30000,
+      timeout: 10000,
     });
 
     await page.getByTestId("blank-flow").click();
+
+    await page.waitForSelector('[data-testid="fit_view"]', {
+      timeout: 5000,
+      state: "visible",
+    });
+
+    await page.waitForSelector('[data-testid="zoom_out"]', {
+      timeout: 5000,
+      state: "visible",
+    });
 
     await page.getByTestId("sidebar-search-input").click();
     await page.getByTestId("sidebar-search-input").fill("ollama");
@@ -47,8 +38,10 @@ test(
     await page.getByTestId("zoom_out").click();
     await page.getByTestId("zoom_out").click();
 
-    const getUA = await page.evaluate(() => navigator.userAgent);
-    const userAgentInfo = uaParser(getUA);
+    await page.waitForSelector('[data-testid="div-generic-node"]', {
+      timeout: 5000,
+      state: "visible",
+    });
 
     await page.getByTestId("div-generic-node").click();
 
